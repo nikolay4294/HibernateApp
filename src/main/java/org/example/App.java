@@ -1,21 +1,15 @@
 package org.example;
 
-
-import org.example.model.Film;
-import org.example.model.Item;
-import org.example.model.Person;
-import org.example.model.Producer;
+import org.example.model.Actor;
+import org.example.model.Movie;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
-/**
- * Hello world!
- */
 public class App {
     public static void main(String[] args) {
 
@@ -24,35 +18,25 @@ public class App {
 //        Configuration configuration = new Configuration().addAnnotatedClass(Person.class).
 //                addAnnotatedClass(Item.class);
 
-        Configuration configuration = new Configuration().addAnnotatedClass(Producer.class).
-                  addAnnotatedClass(Film.class);
+        Configuration configuration = new Configuration().addAnnotatedClass(Movie.class).
+                addAnnotatedClass(Actor.class);
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         Session session = sessionFactory.getCurrentSession();
 
         try {
+
             session.beginTransaction();
 
-//            Person person = session.get(Person.class, 4);
-//            Item item = session.get(Item.class, 1);
-//            item.getOwner().getItems().remove(item);
-//
-//            item.setOwner(person);
-//            person.getItems().add(item);
+            Movie movie = new Movie("Джентельмены удачи", 1975);
+            Actor actor = session.get(Actor.class, 2);
 
-               Producer producer = session.get(Producer.class, 5);
-               List<Film> films = producer.getFilms();
+            movie.setActors(new ArrayList<>(Collections.singletonList(actor)));
+            actor.getMovies().add(movie);
 
-               for (Film f : films)
-                   session.remove(f);
-
-               producer.getFilms().clear();
-
-               session.save(producer);
-
+            session.save(movie);
 
             session.getTransaction().commit();
-
         } finally {
             session.close();
         }

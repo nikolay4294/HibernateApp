@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "Person")
-public class Person {
+@Table(name = "Actor")
+public class Actor {
 
     @Id
     @Column(name = "id")
@@ -18,14 +18,19 @@ public class Person {
     @Column(name = "age")
     private int age;
 
-    @OneToMany(mappedBy = "owner")
-    private List<Item> items;
+    @ManyToMany
+    @JoinTable(
+            name = "Actor_Movie",
+            joinColumns = @JoinColumn(name = "actor_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    private List<Movie> movies;
 
-    public Person() {
+    public Actor() {
 
     }
 
-    public Person(String name, int age) {
+    public Actor(String name, int age) {
         this.name = name;
         this.age = age;
     }
@@ -54,15 +59,19 @@ public class Person {
         this.age = age;
     }
 
-    public List<Item> getItems() {
-        return items;
+    public List<Movie> getMovies() {
+        return movies;
     }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
     }
 
+    @Override
     public String toString() {
-        return this.name + ", " + this.age;
+        return "Actor{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
     }
 }
